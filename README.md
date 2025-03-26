@@ -1,7 +1,7 @@
 ## Combine componentList, propertyList and seqeunceList into render object
 
 ```typescript
-combineLists({ componentList, sequenceList, propertyList });
+const reconstructed = combineLists({ componentList, sequenceList, propertyList });
 ```
 
 ## Extract render object into componentList, propertyList and seqeunceList

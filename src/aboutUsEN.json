@@ -1,0 +1,347 @@
+[
+    {
+      "element": "text",
+      "type": "text",
+      "properties": [
+        {
+          "element_id": "text_label",
+          "label": "Label",
+          "placeholder": "Input here ...",
+          "value": "Text Label",
+          "type": "text"
+        },
+        {
+          "element_id": "text_label_alignment",
+          "label": "Text Label Alignment",
+          "value": "start",
+          "type": "select",
+          "options": [
+            {
+              "label": "Start",
+              "value": "start"
+            },
+            {
+              "label": "Center",
+              "value": "center"
+            },
+            {
+              "label": "End",
+              "value": "end"
+            }
+          ]
+        },
+        {
+          "element_id": "text_label_color",
+          "label": "Text Label Color",
+          "placeholder": "",
+          "value": "#000000",
+          "type": "color-picker"
+        },
+        {
+          "element_id": "text_value",
+          "label": "Value",
+          "placeholder": "Input here ...",
+          "value": "Morning World, Edited",
+          "type": "text"
+        },
+        {
+          "element_id": "text_value_alignment",
+          "label": "Text Value Alignment",
+          "value": "start",
+          "type": "select",
+          "options": [
+            {
+              "label": "Start",
+              "value": "start"
+            },
+            {
+              "label": "Center",
+              "value": "center"
+            },
+            {
+              "label": "End",
+              "value": "end"
+            }
+          ]
+        },
+        {
+          "element_id": "text_value_color",
+          "label": "Text Value Color",
+          "placeholder": "",
+          "value": "#000000",
+          "type": "color-picker"
+        }
+      ],
+      "id": "9d349591-0d3c-40fe-a36b-89c67660e0c0",
+      "children": []
+    },
+    {
+      "element": "card",
+      "type": "card",
+      "properties": [
+        {
+          "element_id": "card_label",
+          "label": "Title",
+          "placeholder": "Input here ...",
+          "value": "Card Title njjij",
+          "type": "text"
+        },
+        {
+          "element_id": "card_image_src",
+          "label": "Image",
+          "placeholder": "Input here ...",
+          "value": "",
+          "type": "image"
+        },
+        {
+          "element_id": "card_subtitle",
+          "label": "SubTitle",
+          "placeholder": "Input here ...",
+          "value": "Card SubTitle",
+          "type": "text"
+        },
+        {
+          "element_id": "card_description",
+          "label": "Description",
+          "placeholder": "Input here ...",
+          "value": "Text Label",
+          "type": "text"
+        },
+        {
+          "element_id": "card_text_color",
+          "label": "Text Color",
+          "placeholder": "",
+          "value": "#000000",
+          "type": "color-picker"
+        },
+        {
+          "element_id": "card_background_color",
+          "label": "Background Color",
+          "placeholder": "",
+          "value": "#FFFFFF",
+          "type": "color-picker"
+        }
+      ],
+      "id": "b8e0d089-492c-4890-bfe2-d03b89b8799d",
+      "children": []
+    },
+    {
+      "element": "two-column",
+      "label": "Two Column",
+      "placeholder": "Input here ...",
+      "value": "Morning World two-column",
+      "type": "two-column",
+      "properties": [
+        {
+          "element_id": "two_column_bg_color",
+          "label": "Background Color",
+          "placeholder": "",
+          "value": "",
+          "type": "color-picker"
+        }
+      ],
+      "children": [
+        {
+          "element": "text",
+          "type": "text",
+          "properties": [
+            {
+              "element_id": "text_label",
+              "label": "Label",
+              "placeholder": "Input here ...",
+              "value": "Text Label",
+              "type": "text"
+            },
+            {
+              "element_id": "text_label_alignment",
+              "label": "Text Label Alignment",
+              "value": "start",
+              "type": "select",
+              "options": [
+                {
+                  "label": "Start",
+                  "value": "start"
+                },
+                {
+                  "label": "Center",
+                  "value": "center"
+                },
+                {
+                  "label": "End",
+                  "value": "end"
+                }
+              ]
+            },
+            {
+              "element_id": "text_label_color",
+              "label": "Text Label Color",
+              "placeholder": "",
+              "value": "#000000",
+              "type": "color-picker"
+            },
+            {
+              "element_id": "text_value",
+              "label": "Value",
+              "placeholder": "Input here ...",
+              "value": "Morning World",
+              "type": "text"
+            },
+            {
+              "element_id": "text_value_alignment",
+              "label": "Text Value Alignment",
+              "value": "start",
+              "type": "select",
+              "options": [
+                {
+                  "label": "Start",
+                  "value": "start"
+                },
+                {
+                  "label": "Center",
+                  "value": "center"
+                },
+                {
+                  "label": "End",
+                  "value": "end"
+                }
+              ]
+            },
+            {
+              "element_id": "text_value_color",
+              "label": "Text Value Color",
+              "placeholder": "",
+              "value": "#000000",
+              "type": "color-picker"
+            }
+          ],
+          "id": "f461e1eb-c530-4f90-80f2-fa9e1d977021",
+          "childType": "two-column-first"
+        },
+        {
+          "element": "text",
+          "type": "text",
+          "properties": [
+            {
+              "element_id": "text_label",
+              "label": "Label",
+              "placeholder": "Input here ...",
+              "value": "Text Label",
+              "type": "text"
+            },
+            {
+              "element_id": "text_label_alignment",
+              "label": "Text Label Alignment",
+              "value": "start",
+              "type": "select",
+              "options": [
+                {
+                  "label": "Start",
+                  "value": "start"
+                },
+                {
+                  "label": "Center",
+                  "value": "center"
+                },
+                {
+                  "label": "End",
+                  "value": "end"
+                }
+              ]
+            },
+            {
+              "element_id": "text_label_color",
+              "label": "Text Label Color",
+              "placeholder": "",
+              "value": "#000000",
+              "type": "color-picker"
+            },
+            {
+              "element_id": "text_value",
+              "label": "Value",
+              "placeholder": "Input here ...",
+              "value": "Morning World",
+              "type": "text"
+            },
+            {
+              "element_id": "text_value_alignment",
+              "label": "Text Value Alignment",
+              "value": "start",
+              "type": "select",
+              "options": [
+                {
+                  "label": "Start",
+                  "value": "start"
+                },
+                {
+                  "label": "Center",
+                  "value": "center"
+                },
+                {
+                  "label": "End",
+                  "value": "end"
+                }
+              ]
+            },
+            {
+              "element_id": "text_value_color",
+              "label": "Text Value Color",
+              "placeholder": "",
+              "value": "#000000",
+              "type": "color-picker"
+            }
+          ],
+          "id": "9b808807-1056-44c0-a3b1-280cc00c2c8d",
+          "childType": "two-column-second"
+        }
+      ],
+      "id": "c9a2ecac-d19f-4bc0-ae6c-607fb8190810"
+    },
+    {
+      "element": "slogan",
+      "type": "slogan",
+      "properties": [
+        {
+          "element_id": "slogan_title",
+          "label": "Title",
+          "placeholder": "Input here ...",
+          "value": "<p><span style=\"font-family: &quot;Courier New&quot;, Courier, monospace;\">Slogan Title</span></p>",
+          "type": "editor"
+        },
+        {
+          "element_id": "slogan_description",
+          "label": "Description",
+          "placeholder": "Input here ...",
+          "value": "Description",
+          "type": "text"
+        }
+      ],
+      "id": "62746533-0299-48c5-99f2-863d1cdba300",
+      "children": []
+    },
+    {
+      "element": "image",
+      "type": "image",
+      "properties": [
+        {
+          "element_id": "image_label",
+          "label": "Label",
+          "placeholder": "Input here ...",
+          "value": "Image Label",
+          "type": "text"
+        },
+        {
+          "element_id": "image_src",
+          "label": "Image",
+          "placeholder": "Input here ...",
+          "value": {
+            "alt": "asdasda",
+            "destination": "",
+            "value": "/bigboxx/caring_company.png"
+          },
+          "type": "image"
+        }
+      ],
+      "id": "4d56afa9-bd34-4b17-bcdf-1c6ab5696199",
+      "children": []
+    }
+  ]

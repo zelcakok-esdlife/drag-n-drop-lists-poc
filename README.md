@@ -32,7 +32,7 @@ const { propertyList: updatedPropertyList, sequenceList: updatedSequenceList } =
 ## Reorder element within propertyList and sequenceList
 
 ```typescript
-// No side effect to the propertyList and sequenceList
+// No side effect to the sequenceList
 const { sequenceList: updatedSequenceList } = reorderElement(
   fromPosition,
   moveToPosition,

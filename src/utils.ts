@@ -6,7 +6,7 @@ import {
   WidgetPropertiesProps,
 } from "./types";
 
-export const constructFromLists = ({
+export const combineLists = ({
   componentList,
   sequenceList,
   propertyList,

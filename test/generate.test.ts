@@ -4,7 +4,7 @@ import * as jsonData from "../src/aboutUsEN.json";
 import { PropertyJson, SequenceListElement } from "../src/types";
 import {
   addElement,
-  constructFromLists,
+  combineLists,
   extractToLists,
   removeElement,
   reorderElement,
@@ -31,7 +31,7 @@ describe("Extract & Reconstuct", () => {
     });
   });
 
-  const reconstructed = constructFromLists(clonedExtractResult);
+  const reconstructed = combineLists(clonedExtractResult);
   it("reconstructed should be the same as the json data", () => {
     reconstructed.map((element: PropertyJson, index: number) => {
       expect(element).toEqual(jsonData[index]);
@@ -166,8 +166,9 @@ describe("Extract & Reconstuct", () => {
     const targetElement = sequenceList[0];
     const secondElement = sequenceList[1];
     const lastElement = sequenceList.at(-1);
+    const fromPosition = 0;
     const { sequenceList: updatedSequenceList } = reorderElement(
-      0,
+      fromPosition,
       moveToPosition,
       sequenceList
     );

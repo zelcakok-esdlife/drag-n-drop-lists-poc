@@ -1,12 +1,11 @@
 import * as jsonData from "../src/aboutUsEN.json";
-// import * as jsonData from "../src/testingDemo.json";
-// import * as jsonData from "../src/homepage.json";
 import { PropertyJson, SequenceListElement } from "../src/types";
 import {
   addChildElement,
   addElement,
   combineLists,
   extractToLists,
+  promoteChildElement,
   removeChildElement,
   removeElement,
   reorderChildElement,
@@ -75,7 +74,7 @@ describe("Extract & Reconstuct", () => {
     const {
       propertyList: updatedPropertyList,
       sequenceList: updatedSequenceList,
-    } = addElement(newElement, 0, propertyList, sequenceList);
+    } = addElement(newElement, 0, sequenceList, propertyList);
 
     expect(updatedPropertyList).not.toEqual(propertyList);
     expect(updatedPropertyList).toHaveProperty("newElementID");
@@ -99,8 +98,8 @@ describe("Extract & Reconstuct", () => {
       newElement,
       0,
       parentElementId,
-      propertyList,
-      sequenceList
+      sequenceList,
+      propertyList
     );
 
     // Property list should add a new entry
@@ -127,8 +126,8 @@ describe("Extract & Reconstuct", () => {
       newElementA,
       0,
       parentElementId,
-      updatedPropertyList,
-      updatedSequenceList
+      updatedSequenceList,
+      updatedPropertyList
     );
 
     // Property list should add a new entry
@@ -154,7 +153,7 @@ describe("Extract & Reconstuct", () => {
     const {
       propertyList: updatedPropertyList,
       sequenceList: updatedSequenceList,
-    } = addElement(newElement, positionToAdd, propertyList, sequenceList);
+    } = addElement(newElement, positionToAdd, sequenceList, propertyList);
 
     expect(updatedPropertyList).not.toEqual(propertyList);
     expect(updatedPropertyList).toHaveProperty("newElementID");
@@ -178,7 +177,7 @@ describe("Extract & Reconstuct", () => {
     const {
       propertyList: updatedPropertyList,
       sequenceList: updatedSequenceList,
-    } = addElement(newElement, positionToAdd, propertyList, sequenceList);
+    } = addElement(newElement, positionToAdd, sequenceList, propertyList);
 
     expect(updatedPropertyList).not.toEqual(propertyList);
     expect(updatedPropertyList).toHaveProperty("newElementID");
@@ -199,7 +198,7 @@ describe("Extract & Reconstuct", () => {
     const {
       propertyList: updatedPropertyList,
       sequenceList: updatedSequenceList,
-    } = removeElement(targetElement.id, propertyList, sequenceList);
+    } = removeElement(targetElement.id, sequenceList, propertyList);
 
     expect(updatedPropertyList).not.toHaveProperty(targetElement.id);
     expect(updatedSequenceList.length - sequenceList.length).toBe(-1);
@@ -219,8 +218,8 @@ describe("Extract & Reconstuct", () => {
     } = removeChildElement(
       targetElementId,
       parentElementId,
-      propertyList,
-      sequenceList
+      sequenceList,
+      propertyList
     );
 
     expect(updatedPropertyList).not.toHaveProperty(targetElementId);
@@ -278,6 +277,35 @@ describe("Extract & Reconstuct", () => {
     );
 
     expect(updatedSequenceList.length).toBe(sequenceList.length);
+    expect(parentSequenceListElement.children).toEqual(expectedResult);
+  });
+
+  it("should be able to pick out a child element and add back to the upper level", () => {
+    const parentElementId = "c9a2ecac-d19f-4bc0-ae6c-607fb8190810";
+    const childElementId = "9b808807-1056-44c0-a3b1-280cc00c2c8d";
+    const expectedResult = [{ id: "f461e1eb-c530-4f90-80f2-fa9e1d977021" }];
+
+    const positionToBeAddBack = Math.floor(sequenceList.length / 2);
+    const { sequenceList: updatedSequenceList } = promoteChildElement(
+      childElementId,
+      parentElementId,
+      positionToBeAddBack,
+      {
+        componentList,
+        sequenceList,
+        propertyList,
+      }
+    );
+
+    expect(updatedSequenceList.length).toBe(sequenceList.length + 1);
+    expect(updatedSequenceList[positionToBeAddBack]).toEqual({
+      id: childElementId,
+    });
+
+    const parentSequenceListElement = updatedSequenceList.find(
+      (sequenceListElement: SequenceListElement) =>
+        sequenceListElement.id === parentElementId
+    );
     expect(parentSequenceListElement.children).toEqual(expectedResult);
   });
 });

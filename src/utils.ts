@@ -6,47 +6,71 @@ import {
   WidgetPropertiesProps,
 } from "./types";
 
+const getSequenceListElementById = (
+  elementId: string,
+  sequenceList: SequenceListElement[],
+  allowNotFound: boolean = false
+): { sequenceListElement: SequenceListElement; index: number } => {
+  const clonedSequenceList = structuredClone(sequenceList);
+  const sequenceListElement = clonedSequenceList.find(
+    (element: SequenceListElement) => element.id === elementId
+  );
+  if (allowNotFound === false && sequenceListElement === undefined) {
+    throw Error("Error: Sequence element is not found");
+  }
+  const index = clonedSequenceList.indexOf(sequenceListElement);
+  return { sequenceListElement, index };
+};
+
+const getHydratedElement = (
+  elementId: string,
+  index: number,
+  { componentList, sequenceList, propertyList }: DragDropStruct
+): PropertyJson => {
+  const element: PropertyJson = structuredClone(componentList[index]);
+  const { id, children }: SequenceListElement = structuredClone(
+    sequenceList[index]
+  );
+  const properties: PropertyList = structuredClone(
+    propertyList[elementId]
+  ) as PropertyList;
+
+  element.id = id;
+  element.properties.forEach((property: WidgetPropertiesProps) => {
+    property.value = properties[property.element_id] as string;
+  });
+  if (properties.value !== undefined) {
+    element.value = properties.value as string;
+  }
+  if (children && children.length > 0) {
+    element.children.forEach((child: PropertyJson, childIndex: number) => {
+      child.id = children[childIndex].id;
+      const childProperties = propertyList[child.id];
+      if (child.properties && child.properties.length > 0) {
+        child.properties.forEach(
+          (property: WidgetPropertiesProps) =>
+            (property.value = childProperties[property.element_id])
+        );
+      }
+    });
+  } else {
+    element.children = [];
+  }
+  return element;
+};
+
 export const combineLists = ({
   componentList,
   sequenceList,
   propertyList,
-}: DragDropStruct) => {
-  // Clone a copy
-  const result = structuredClone(componentList);
-  result.forEach((element: PropertyJson, index: number) => {
-    const { id, children } = sequenceList[index];
-    const properties = propertyList[id];
-    // Fill the element id
-    element.id = id;
-    if (properties["value"]) {
-      // Some element has value field
-      element.value = properties["value"];
-    }
-    // Fill the properties from propertyList
-    element.properties.map(
-      (property: WidgetPropertiesProps) =>
-        (property.value = properties[property.element_id])
-    );
-    // Fill its children if available
-    if (children && children.length > 0) {
-      element.children.map((child: PropertyJson, childIndex: number) => {
-        // Fill the child id
-        child.id = children[childIndex].id;
-        const childProperties = propertyList[child.id];
-        // Fill child's properties
-        if (child.properties && child.properties.length > 0) {
-          child.properties.map(
-            (property: PropertyJson) =>
-              (property.value = childProperties[property.element_id])
-          );
-        }
-      });
-    } else {
-      // Set the empty children list
-      element.children = [];
-    }
-  });
-  return result;
+}: DragDropStruct): PropertyJson[] => {
+  return sequenceList.map((element: SequenceListElement, index: number) =>
+    getHydratedElement(element.id, index, {
+      componentList,
+      sequenceList,
+      propertyList,
+    })
+  );
 };
 
 export const extractToLists = (data: PropertyJson[]): DragDropStruct => {
@@ -104,10 +128,10 @@ export const extractToLists = (data: PropertyJson[]): DragDropStruct => {
 export const addElement = (
   element: PropertyJson,
   index: number,
-  propertyList: PropertyList,
-  sequenceList: SequenceListElement[]
+  sequenceList: SequenceListElement[],
+  propertyList: PropertyList | null = null
 ): { propertyList: PropertyList; sequenceList: SequenceListElement[] } => {
-  const clonedPropertyList = structuredClone(propertyList ?? {});
+  let clonedPropertyList = null;
   const clonedSequenceList = structuredClone(sequenceList ?? []);
   const { id, value, properties } = element;
   if (id === undefined || id === null) {
@@ -115,14 +139,17 @@ export const addElement = (
   }
 
   // Update property list
-  const newPropertyListElement: PropertyList = {};
-  properties.forEach((property: WidgetPropertiesProps) => {
-    newPropertyListElement[property.element_id] = property.value;
-  });
-  if (value !== undefined) {
-    newPropertyListElement.value = value;
+  if (propertyList !== null) {
+    clonedPropertyList = structuredClone(propertyList);
+    const newPropertyListElement: PropertyList = {};
+    properties.forEach((property: WidgetPropertiesProps) => {
+      newPropertyListElement[property.element_id] = property.value;
+    });
+    if (value !== undefined) {
+      newPropertyListElement.value = value;
+    }
+    clonedPropertyList[id] = newPropertyListElement;
   }
-  clonedPropertyList[id] = newPropertyListElement;
 
   // Update sequence list
   const newSequenceListElement: SequenceListElement = { id };
@@ -138,31 +165,19 @@ export const addChildElement = (
   element: PropertyJson,
   childIndex: number,
   parentElementId: string,
-  propertyList: PropertyList,
-  sequenceList: SequenceListElement[]
+  sequenceList: SequenceListElement[],
+  propertyList: PropertyList | null = null
 ): { propertyList: PropertyList; sequenceList: SequenceListElement[] } => {
   const clonedSequenceList = structuredClone(sequenceList);
-
-  // Get the parent sequence list
-  const parentSequenceListElement = clonedSequenceList.find(
-    (sequenceListElement: SequenceListElement) =>
-      sequenceListElement.id === parentElementId
-  );
-  if (parentSequenceListElement === undefined) {
-    throw Error("Error: Parent sequence list element is not found");
-  }
+  const { sequenceListElement: parentElement, index } =
+    getSequenceListElementById(parentElementId, sequenceList);
 
   const {
     propertyList: updatedPropertyList,
     sequenceList: updatedChildSequenceList,
-  } = addElement(
-    element,
-    childIndex,
-    propertyList,
-    parentSequenceListElement.children
-  );
+  } = addElement(element, childIndex, parentElement.children, propertyList);
 
-  parentSequenceListElement.children = updatedChildSequenceList;
+  clonedSequenceList[index].children = updatedChildSequenceList;
   return {
     propertyList: updatedPropertyList,
     sequenceList: clonedSequenceList,
@@ -171,19 +186,22 @@ export const addChildElement = (
 
 export const removeElement = (
   elementIdToBeRemoved: string,
-  propertyList: PropertyList,
-  sequenceList: SequenceListElement[]
-): { propertyList: PropertyList; sequenceList: SequenceListElement[] } => {
-  const updatedPropertyList = structuredClone(propertyList);
+  sequenceList: SequenceListElement[],
+  propertyList: PropertyList | null = null
+): {
+  sequenceList: SequenceListElement[];
+  propertyList: PropertyList | null;
+} => {
+  let updatedPropertyList = null;
   const clonedSequenceList = structuredClone(sequenceList);
-  let resultSequenceList: SequenceListElement[] = [];
-
-  delete updatedPropertyList[elementIdToBeRemoved];
-
-  resultSequenceList = clonedSequenceList.filter(
+  const resultSequenceList = clonedSequenceList.filter(
     (item) => item.id !== elementIdToBeRemoved
   );
 
+  if (propertyList !== null) {
+    updatedPropertyList = structuredClone(propertyList);
+    delete updatedPropertyList[elementIdToBeRemoved];
+  }
   return {
     propertyList: updatedPropertyList,
     sequenceList: resultSequenceList,
@@ -193,28 +211,21 @@ export const removeElement = (
 export const removeChildElement = (
   elementIdToBeRemoved: string,
   parentElementId: string,
-  propertyList: PropertyList,
-  sequenceList: SequenceListElement[]
-): { propertyList: PropertyList; sequenceList: SequenceListElement[] } => {
+  sequenceList: SequenceListElement[],
+  propertyList: PropertyList | null = null
+): {
+  sequenceList: SequenceListElement[];
+  propertyList: PropertyList | null;
+} => {
   const clonedSequenceList = structuredClone(sequenceList);
-  // Get the parent sequence list
-  const parentSequenceListElement = clonedSequenceList.find(
-    (sequenceListElement: SequenceListElement) =>
-      sequenceListElement.id === parentElementId
-  );
-  if (parentSequenceListElement === undefined) {
-    throw Error("Error: Parent sequence list element is not found");
-  }
+  const { sequenceListElement: parentElement, index } =
+    getSequenceListElementById(parentElementId, sequenceList);
 
   const {
     propertyList: updatedPropertyList,
     sequenceList: updatedChildSequenceList,
-  } = removeElement(
-    elementIdToBeRemoved,
-    propertyList,
-    parentSequenceListElement.children
-  );
-  parentSequenceListElement.children = updatedChildSequenceList;
+  } = removeElement(elementIdToBeRemoved, parentElement.children, propertyList);
+  clonedSequenceList[index].children = updatedChildSequenceList;
 
   return {
     propertyList: updatedPropertyList,
@@ -250,15 +261,44 @@ export const reorderChildElement = (
   sequenceList: SequenceListElement[]
 ): { sequenceList: SequenceListElement[] } => {
   const clonedSequenceList = structuredClone(sequenceList);
-  const parentSequenceListElement = clonedSequenceList.find(
-    (sequenceListElement: SequenceListElement) =>
-      sequenceListElement.id === parentElementId
-  );
+  const { sequenceListElement: parentElement, index } =
+    getSequenceListElementById(parentElementId, sequenceList);
+
   const { sequenceList: updatedChildSequenceList } = reorderElement(
     fromElementIndex,
     toElementIndex,
-    parentSequenceListElement.children
+    parentElement.children
   );
-  parentSequenceListElement.children = updatedChildSequenceList;
+  clonedSequenceList[index].children = updatedChildSequenceList;
   return { sequenceList: clonedSequenceList };
+};
+
+export const promoteChildElement = (
+  elementIdToBePickedOut: string,
+  parentElementId: string,
+  toUpperLevelPosition: number,
+  { componentList, sequenceList, propertyList }: DragDropStruct
+): { sequenceList: SequenceListElement[] } => {
+  const { sequenceListElement: parentElement } = getSequenceListElementById(
+    parentElementId,
+    sequenceList
+  );
+  const { sequenceListElement: childSequenceListElement, index: childIndex } =
+    getSequenceListElementById(elementIdToBePickedOut, parentElement.children);
+  const childElement = getHydratedElement(
+    childSequenceListElement.id,
+    childIndex,
+    { componentList, sequenceList: parentElement.children, propertyList }
+  );
+  const { sequenceList: sequenceListWithoutChild } = removeChildElement(
+    elementIdToBePickedOut,
+    parentElementId,
+    sequenceList
+  );
+  const { sequenceList: reassignedSequenceList } = addElement(
+    childElement,
+    toUpperLevelPosition,
+    sequenceListWithoutChild
+  );
+  return { sequenceList: reassignedSequenceList };
 };

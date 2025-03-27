@@ -1,41 +1,135 @@
-## Combine componentList, propertyList and seqeunceList into render object
+# Drag and Drop form update
+
+## Combine lists
 
 ```typescript
-const reconstructed = combineLists({ componentList, sequenceList, propertyList });
+const reconstructed = combineLists({
+  componentList,
+  sequenceList,
+  propertyList,
+});
 ```
 
-## Extract render object into componentList, propertyList and seqeunceList
+## Extract to lists
 
 ```typescript
-const { componentList, sequenceList, propertyList } = extractToLists(
-  jsonData as PropertyJson[]
+const data: PropertyJson[];
+const { componentList, sequenceList, propertyList } = extractToLists(data);
+```
+
+## Add element
+
+```typescript
+const element: PropertyJson;
+const positionToAdd: number;
+const sequenceList: SequenceListElement[];
+const propertyList: PropertyList | null;
+
+const result: {
+  sequenceList: SequenceListElement[];
+  propertyList: PropertyJson | null;
+} = addElement(element, positionToAdd, sequenceList, propertyList);
+```
+
+## Add child element
+
+```typescript
+const element: PropertyJson;
+const parentElementId: string;
+const positionToAdd: number;
+const sequenceList: SequenceListElement[];
+const propertyList: PropertyList | null;
+
+const result: {
+  sequenceList: SequenceListElement[];
+  propertyList: PropertyJson | null;
+} = addChildElement(
+  element,
+  positionToAdd,
+  parentElementId,
+  sequenceList,
+  propertyList
 );
 ```
 
-## Add element to propertyList and sequenceList
+## Remove element
 
 ```typescript
-// No side effect to the propertyList and sequenceList
+const elementIdToBeRemoved: string;
+const sequenceList: SequenceListElement[];
+const propertyList: PropertyList | null;
 
-const { propertyList: updatedPropertyList, sequenceList: updatedSequenceList } =
-  addElement(newElement, 0, propertyList, sequenceList);
+const result: {
+  sequenceList: SequenceListElement[];
+  propertyList: PropertyJson | null;
+} = removeElement(elementIdToBeRemoved, sequenceList, propertyList);
 ```
 
-## Remove element from propertyList and sequenceList
+## Remove child element
 
 ```typescript
-// No side effect to the propertyList and sequenceList
-const { propertyList: updatedPropertyList, sequenceList: updatedSequenceList } =
-  removeElement(targetElement.id, propertyList, sequenceList);
+const elementIdToBeRemoved: string;
+const parentElementId: string;
+const sequenceList: SequenceListElement[];
+const propertyList: PropertyList | null;
+
+const result: {
+  sequenceList: SequenceListElement[];
+  propertyList: PropertyJson | null;
+} = removeChildElement(
+  elementIdToBeRemoved,
+  parentElementId,
+  sequenceList,
+  propertyList
+);
 ```
 
-## Reorder element within propertyList and sequenceList
+## Reorder element
 
 ```typescript
-// No side effect to the sequenceList
+const fromPosition: number;
+const toPosition: number;
+const sequenceList: SequenceListElement[];
+
 const { sequenceList: updatedSequenceList } = reorderElement(
   fromPosition,
-  moveToPosition,
+  toPosition,
   sequenceList
+);
+```
+
+## Reorder child element
+
+```typescript
+const fromPosition: number;
+const toPosition: number;
+const parentElementId: string;
+const sequenceList: SequenceListElement[];
+
+const { sequenceList: updatedSequenceList } = reorderElement(
+  fromPosition,
+  toPosition,
+  parentElementId,
+  sequenceList
+);
+```
+
+## Promote child element
+
+```typescript
+const childElementId: string;
+const parentElementId: string;
+const toUpperPosition: number;
+const { componentList, sequenceList, propertyList }: DragDropStruct;
+
+const { sequenceList: updatedSequenceList } = promoteChildElement(
+  childElementId,
+  parentElementId,
+  toUpperPosition,
+  {
+    componentList,
+    sequenceList,
+    propertyList,
+  }
 );
 ```

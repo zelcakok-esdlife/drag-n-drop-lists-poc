@@ -27,6 +27,7 @@ describe("Extract & Reconstuct", () => {
   it("sequenceList should have id and children fields", () => {
     sequenceList.forEach((sequenceListElement: SequenceListElement) => {
       expect(sequenceListElement).toHaveProperty("id");
+      expect(sequenceListElement).toHaveProperty("elementType");
       if (sequenceListElement.children) {
         expect(sequenceListElement.children).toBeInstanceOf(Array);
       }
@@ -258,8 +259,8 @@ describe("Extract & Reconstuct", () => {
   it("should be able to reorder child element", () => {
     const parentElementId = "c9a2ecac-d19f-4bc0-ae6c-607fb8190810";
     const expectedResult = [
-      { id: "9b808807-1056-44c0-a3b1-280cc00c2c8d" },
-      { id: "f461e1eb-c530-4f90-80f2-fa9e1d977021" },
+      { id: "9b808807-1056-44c0-a3b1-280cc00c2c8d", elementType: "text" },
+      { id: "f461e1eb-c530-4f90-80f2-fa9e1d977021", elementType: "text" },
     ];
     const childElementPositionFrom = 0;
     const childElementPositionTo = 1;
@@ -283,7 +284,9 @@ describe("Extract & Reconstuct", () => {
   it("should be able to pick out a child element and add back to the upper level", () => {
     const parentElementId = "c9a2ecac-d19f-4bc0-ae6c-607fb8190810";
     const childElementId = "9b808807-1056-44c0-a3b1-280cc00c2c8d";
-    const expectedResult = [{ id: "f461e1eb-c530-4f90-80f2-fa9e1d977021" }];
+    const expectedResult = [
+      { id: "f461e1eb-c530-4f90-80f2-fa9e1d977021", elementType: "text" },
+    ];
     const clonedPropertyList = structuredClone(propertyList);
 
     const positionToBeAddBack = Math.floor(sequenceList.length / 2);

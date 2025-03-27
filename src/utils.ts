@@ -89,10 +89,14 @@ export const extractToLists = (data: PropertyJson[]): DragDropStruct => {
       dragDropStructResult.componentList.unshift(clonedElement);
 
       // toSequenceList
-      const sequence: SequenceListElement = { id: element.id ?? "" };
+      const sequence: SequenceListElement = {
+        id: element.id ?? "",
+        elementType: element.element,
+      };
       if (children && children.length > 0) {
         sequence.children = children.map((child: PropertyJson) => ({
           id: child.id ?? "",
+          elementType: child.element,
         }));
       }
       dragDropStructResult.sequenceList.unshift(sequence);

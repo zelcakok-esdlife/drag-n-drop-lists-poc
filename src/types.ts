@@ -34,6 +34,7 @@ export interface PropertyList {
 
 export interface SequenceListElement {
   id: string;
+  elementType?: string;
   children?: { id: string }[];
 }
 

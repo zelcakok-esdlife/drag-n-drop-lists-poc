@@ -284,6 +284,7 @@ describe("Extract & Reconstuct", () => {
     const parentElementId = "c9a2ecac-d19f-4bc0-ae6c-607fb8190810";
     const childElementId = "9b808807-1056-44c0-a3b1-280cc00c2c8d";
     const expectedResult = [{ id: "f461e1eb-c530-4f90-80f2-fa9e1d977021" }];
+    const clonedPropertyList = structuredClone(propertyList);
 
     const positionToBeAddBack = Math.floor(sequenceList.length / 2);
     const { sequenceList: updatedSequenceList } = promoteChildElement(
@@ -307,5 +308,6 @@ describe("Extract & Reconstuct", () => {
         sequenceListElement.id === parentElementId
     );
     expect(parentSequenceListElement.children).toEqual(expectedResult);
+    expect(clonedPropertyList).toEqual(propertyList);
   });
 });
